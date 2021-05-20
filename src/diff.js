@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-prototype-builtins */
 import path from 'path';
 import { readFileSync, writeFileSync } from 'fs';
 
@@ -13,6 +15,7 @@ const getFilePath = (notes) => {
   return path.join(resolve, dirname, basename);
 };
 
+// eslint-disable-next-line consistent-return
 const parserJson = (notes) => {
   try {
     const filePath = getFilePath(notes);
@@ -21,32 +24,27 @@ const parserJson = (notes) => {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 const compareProperties = (object1, object2, property) => {
   if (object1.hasOwnProperty(property) && object2.hasOwnProperty(property)) {
     if (object1[property] === object2[property]) {
       return { status: 'unchanged', name: property, value: object1[property] };
     }
-    return { status: 'changed', name: property, oldValue: object1[property], newValue: object2[property] }
+    return {
+      status: 'changed', name: property, oldValue: object1[property], newValue: object2[property],
+    };
   }
-  else if (object1.hasOwnProperty(property)) {
-    return { status: 'changed', name: property, oldValue: object1[property] }
+  if (object1.hasOwnProperty(property)) {
+    return { status: 'changed', name: property, oldValue: object1[property] };
   }
-  return { status: 'changed', name: property, newValue: object2[property]}
-}
-
-function sortfunction(a, b){
-  return a.name - b.name;
-}
+  return { status: 'changed', name: property, newValue: object2[property] };
+};
 
 const diff = (filePathBefore, filePathAfter) => {
   const fileBefore = parserJson(filePathBefore);
   const fileAfter = parserJson(filePathAfter);
-  //console.log(fileAfter);
-  //console.log(fileBefore);
-  const keys = Object.keys({...fileAfter, ...fileBefore});
-  //console.log(keys);
+  const keys = Object.keys({ ...fileAfter, ...fileBefore });
   const properties = keys.map((element) => compareProperties(fileBefore, fileAfter, element)).sort((a, b) => {
     const nameA = a.name.toLowerCase();
     const nameB = b.name.toLowerCase();
@@ -58,32 +56,24 @@ const diff = (filePathBefore, filePathAfter) => {
     }
     return 0;
   });
-  //console.log(properties)
   const result = properties.reduce((acc, element) => {
-    //const obj = compareProperties(fileBefore, fileAfter, element);
-    //console.log(obj);
     if (element.status === 'unchanged') {
-      const result = `    ${element.name}: ${element.value}`;
-      acc.push(result);
+      acc.push(`    ${element.name}: ${element.value}`);
       return acc;
     }
-    else if (element.hasOwnProperty('oldValue') && element.hasOwnProperty('newValue')) {
-      const result = `  - ${element.name}: ${element.oldValue}\n  + ${element.name}: ${element.newValue}`;
-      acc.push(result);
+    if (element.hasOwnProperty('oldValue') && element.hasOwnProperty('newValue')) {
+      acc.push(`  - ${element.name}: ${element.oldValue}\n  + ${element.name}: ${element.newValue}`);
       return acc;
     }
-    else {
-      if (element.hasOwnProperty('oldValue')) {
-        const result = `  - ${element.name}: ${element.oldValue}`;
-        acc.push(result);
-        return acc;
-      }
-      acc.push(`  + ${element.name}: ${element.newValue}`);
+    if (element.hasOwnProperty('oldValue')) {
+      acc.push(`  - ${element.name}: ${element.oldValue}`);
       return acc;
     }
+    acc.push(`  + ${element.name}: ${element.newValue}`);
+    return acc;
   }, []);
-  //console.log(result)
-  return '{\n' + result.join('\n') + '\n}';
+  // console.log(result)
+  return `{\n${result.join('\n')}\n}`;
 };
 
 export default diff;

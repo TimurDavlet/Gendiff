@@ -22,7 +22,7 @@
   "homepage": "https://github.com/TimurDavlet/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^7.2.0",
-    "eslint": "^7.12.1",
+    "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.0",
