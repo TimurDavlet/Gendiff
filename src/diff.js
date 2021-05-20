@@ -80,3 +80,4 @@ export default diff;
 // console.log(`Current directory: ${process.cwd()}`);
 // console.log(path.resolve('/home/js'))
 // console.log(diff('file1.json', 'file2.json'));
+// test
