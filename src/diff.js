@@ -50,7 +50,7 @@ const diff = (filePathBefore, filePathAfter) => {
     return acc;
   }, []);
   // console.log(result)
-  console.log(`{\n${result.join('\n')}\n}`);
+  // console.log(`{\n${result.join('\n')}\n}`);
   return `{\n${result.join('\n')}\n}`;
 };
 
