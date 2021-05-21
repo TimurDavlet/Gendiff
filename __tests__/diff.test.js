@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import diff from '../src/diff.js';

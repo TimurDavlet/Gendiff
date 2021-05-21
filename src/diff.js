@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 /* eslint-disable no-prototype-builtins */
 import path from 'path';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
+// import { readFileSync, writeFileSync } from 'fs';
 
 const getFilePath = (notes) => {
   const dirname = path.dirname(notes);
