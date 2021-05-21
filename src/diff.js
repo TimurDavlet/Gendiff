@@ -1,31 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-prototype-builtins */
-import path from 'path';
-import { readFileSync } from 'fs';
+import { parsingDoc } from './parsers.js';
 // import { readFileSync, writeFileSync } from 'fs';
-
-const getFilePath = (notes) => {
-  const dirname = path.dirname(notes);
-  const basename = path.basename(notes);
-  const resolve = path.resolve();
-  if (dirname === '.') {
-    return path.join(resolve, basename);
-  } if (dirname.substr(0, 1) === '/') {
-    return path.join(dirname, basename);
-  }
-  return path.join(resolve, dirname, basename);
-};
-
-// eslint-disable-next-line consistent-return
-const parserJson = (notes) => {
-  try {
-    const filePath = getFilePath(notes);
-    const readFile = readFileSync(filePath, 'utf8');
-    return JSON.parse(readFile);
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 const compareProperties = (object1, object2, property) => {
   if (object1.hasOwnProperty(property) && object2.hasOwnProperty(property)) {
@@ -43,8 +19,8 @@ const compareProperties = (object1, object2, property) => {
 };
 
 const diff = (filePathBefore, filePathAfter) => {
-  const fileBefore = parserJson(filePathBefore);
-  const fileAfter = parserJson(filePathAfter);
+  const fileBefore = parsingDoc(filePathBefore);
+  const fileAfter = parsingDoc(filePathAfter);
   const keys = Object.keys({ ...fileAfter, ...fileBefore });
   const properties = keys.map((element) => compareProperties(fileBefore, fileAfter, element)).sort((a, b) => {
     const nameA = a.name.toLowerCase();
@@ -74,6 +50,7 @@ const diff = (filePathBefore, filePathAfter) => {
     return acc;
   }, []);
   // console.log(result)
+  console.log(`{\n${result.join('\n')}\n}`);
   return `{\n${result.join('\n')}\n}`;
 };
 

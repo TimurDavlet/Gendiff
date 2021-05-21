@@ -1,0 +1,4 @@
+  host: "ya.ru"
+  timeout: 70
+  proxy: "123.265.02.01"
+  follow: true
