@@ -28,3 +28,4 @@ export const parsingDoc = (notes) => {
     console.log(err);
   }
 };
+// console.log(parsingDoc('fileyaml1.yaml'));
