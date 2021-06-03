@@ -1,93 +1,46 @@
-/* eslint-disable no-underscore-dangle */
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
-import diff from '../src/core/diff.js';
-import stylish from '../src/formatters/stylish.js';
-import parsingDoc from '../src/core/parsers.js';
+import { readFileSync } from 'fs';
+import genDiff from '../src/index.js';
 
+// eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname(__filename);
-
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-const flatFileComparisonResultJSON = `{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}`;
-
-const flatFileComparisonResultYAML = `{
-  - follow: true
-    host: ya.ru
-  - proxy: 123.265.02.01
-  - timeout: 70
-  + timeout: 50
-  + verbose: true
-}`;
-
-const ComparisonOfAttachedFiles = `{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: null
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-        setting6: {
-            doge: {
-              - wow: 
-              + wow: so much
-            }
-            key: value
-          + ops: vops
-        }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-        fee: 100500
-    }
-}`;
-
-test('diffJSON', () => {
-  const jsonBefore = parsingDoc(getFixturePath('file1.json'));
-  const jsonAfter = parsingDoc(getFixturePath('file2.json'));
-  const object = diff(jsonBefore, jsonAfter);
-  expect(stylish(object)).toEqual(flatFileComparisonResultJSON);
+const expectedFlat = readFileSync(getFixturePath('expectedFlat.txt'), 'utf8');
+const pathToFile1 = getFixturePath('file1.json');
+const pathToFile2 = getFixturePath('file2.json');
+test('Comparison of flat json files', () => {
+  expect(genDiff(pathToFile1, pathToFile2)).toBe(expectedFlat);
 });
-test('diffYAML', () => {
-  const jsonBefore = parsingDoc(getFixturePath('fileyaml1.yaml'));
-  const jsonAfter = parsingDoc(getFixturePath('fileyaml2.yaml'));
-  const object = diff(jsonBefore, jsonAfter);
-  expect(stylish(object)).toEqual(flatFileComparisonResultYAML);
+
+const pathToFile3 = getFixturePath('file1.yml');
+const pathToFile4 = getFixturePath('file2.yml');
+test('Comparison of flat yml files', () => {
+  expect(genDiff(pathToFile3, pathToFile4)).toBe(expectedFlat);
 });
-test('differenceRecursion', () => {
-  const jsonBefore = parsingDoc(getFixturePath('fileComplex1.json'));
-  const jsonAfter = parsingDoc(getFixturePath('fileComplex2.json'));
-  const object = diff(jsonBefore, jsonAfter);
-  expect(stylish(object)).toEqual(ComparisonOfAttachedFiles);
+
+const expectedComplex = readFileSync(getFixturePath('expectedComplex.txt'), 'utf8');
+const pathToFile5 = getFixturePath('fileComplex1.json');
+const pathToFile6 = getFixturePath('fileComplex2.json');
+test('Comparison of complex json files', () => {
+  expect(genDiff(pathToFile5, pathToFile6)).toBe(expectedComplex);
+});
+
+const pathToFile7 = getFixturePath('fileComplex1.yml');
+const pathToFile8 = getFixturePath('fileComplex2.yml');
+test('Comparison of complex yml files', () => {
+  expect(genDiff(pathToFile7, pathToFile8)).toBe(expectedComplex);
+});
+
+const expectedComplexPlain = readFileSync(getFixturePath('expectedComplexPlain.txt'), 'utf8');
+test('Comparison of complex json files with PLAIN formatter', () => {
+  expect(genDiff(pathToFile5, pathToFile6, 'plain')).toBe(expectedComplexPlain);
+});
+
+const expectedComplexJSON = readFileSync(getFixturePath('expectedComplexJSON.txt'), 'utf8');
+test('Comparison of complex json files with JSON formatter', () => {
+  expect(genDiff(pathToFile5, pathToFile6, 'json')).toBe(expectedComplexJSON);
 });
