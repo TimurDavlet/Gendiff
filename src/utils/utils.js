@@ -7,3 +7,5 @@ export const valueIsObj = (obj, key) => {
 
 // eslint-disable-next-line no-prototype-builtins
 export const objHasKey = (obj, key) => obj.hasOwnProperty(key);
+
+export const valueIsStr = (obj, key) => typeof obj[key] === 'string';
