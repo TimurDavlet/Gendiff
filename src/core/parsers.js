@@ -3,7 +3,7 @@ import yaml from 'js-yaml';
 import path from 'path';
 import { readFileSync } from 'fs';
 
-export const getFilePath = (notes) => {
+const getFilePath = (notes) => {
   const dirname = path.dirname(notes);
   const basename = path.basename(notes);
   const resolve = path.resolve();
@@ -15,7 +15,7 @@ export const getFilePath = (notes) => {
   return path.join(resolve, dirname, basename);
 };
 
-export const parsingDoc = (notes) => {
+export default (notes) => {
   try {
     const filePath = getFilePath(notes);
     const readFile = readFileSync(filePath, 'utf8');

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import diff from '../src/core/diff.js';
 import stylish from '../src/formatters/stylish.js';
-import { parsingDoc } from '../src/core/parsers.js';
+import parsingDoc from '../src/core/parsers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -86,8 +86,8 @@ test('diffYAML', () => {
   expect(stylish(object)).toEqual(flatFileComparisonResultYAML);
 });
 test('differenceRecursion', () => {
-  const jsonBefore = parsingDoc(getFixturePath('fileWithNestedStructure1.json'));
-  const jsonAfter = parsingDoc(getFixturePath('fileWithNestedStructure2.json'));
+  const jsonBefore = parsingDoc(getFixturePath('fileComplex1.json'));
+  const jsonAfter = parsingDoc(getFixturePath('fileComplex2.json'));
   const object = diff(jsonBefore, jsonAfter);
   expect(stylish(object)).toEqual(ComparisonOfAttachedFiles);
 });

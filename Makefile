@@ -1,6 +1,7 @@
 
 install:
-	npm install
+	npm ci
+	npm link
 
 test:
 	npx -n --experimental-vm-modules jest
@@ -13,3 +14,6 @@ publish:
 
 lint:
 	npx eslint .
+
+uninstall:
+	npm rm --global @hexlet/code

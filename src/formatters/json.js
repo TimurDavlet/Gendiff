@@ -1,4 +1,4 @@
-import valueIsObj from '../utils/utils.js';
+import { valueIsObj } from '../utils/utils.js';
 
 const formatSpacedKeys = (obj) => {
   const result = Object.keys(obj)
