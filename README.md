@@ -32,7 +32,7 @@ Gendiff requires Node.js v14.6.0+ to run.
 
 Сравните два файла, используя другие форматы:
 ```
-$ gendiff -f простой pathToFile1.json pathToFile2.json
+$ gendiff -f plain pathToFile1.json pathToFile2.json
 $ gendiff -f json pathToFile1.json pathToFile2.json
 ```
 Запустить тесты:
