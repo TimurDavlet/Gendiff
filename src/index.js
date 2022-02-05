@@ -4,7 +4,7 @@ import parsingDoc from './core/parsers.js';
 import chooseFormatter from './formatters/index.js';
 import { getFormatFile, getAbsolutePath } from './core/path.js';
 
-const expo = (filepath1, filepath2, formatName = 'stylish') => {
+export default (filepath1, filepath2, formatName = 'stylish') => {
   const absolutePath1 = getAbsolutePath(filepath1);
   const absolutePath2 = getAbsolutePath(filepath2);
   const formatFile1 = getFormatFile(filepath1);
@@ -21,5 +21,3 @@ const expo = (filepath1, filepath2, formatName = 'stylish') => {
     return null;
   }
 };
-
-export default expo;
