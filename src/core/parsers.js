@@ -1,4 +1,3 @@
-
 import yaml from 'js-yaml';
 
 const parsing = (data, format) => {
@@ -12,6 +11,6 @@ const parsing = (data, format) => {
     default:
       return null;
   }
-}
+};
 
 export default parsing;
