@@ -27,7 +27,7 @@ const buildDiff = (obj1, obj2) => {
     }
 
     return { name: key, value: firstValue, type: 'unchanged' };
-  }, []);
+  });
 
   return difference;
 };

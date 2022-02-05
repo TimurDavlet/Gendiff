@@ -9,15 +9,10 @@ export default (filepath1, filepath2, formatName = 'stylish') => {
   const absolutePath2 = getAbsolutePath(filepath2);
   const formatFile1 = getFormatFile(filepath1);
   const formatFile2 = getFormatFile(filepath2);
-  try {
-    const fileData1 = readFileSync(absolutePath1, 'utf8');
-    const fileData2 = readFileSync(absolutePath2, 'utf8');
-    const parsingFileData1 = parsingDoc(fileData1, formatFile1);
-    const parsingFileData2 = parsingDoc(fileData2, formatFile2);
-    const difference = buildDiff(parsingFileData1, parsingFileData2);
-    return chooseFormatter(formatName)(difference);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  const fileData1 = readFileSync(absolutePath1, 'utf8');
+  const fileData2 = readFileSync(absolutePath2, 'utf8');
+  const parsingFileData1 = parsingDoc(fileData1, formatFile1);
+  const parsingFileData2 = parsingDoc(fileData2, formatFile2);
+  const difference = buildDiff(parsingFileData1, parsingFileData2);
+  return chooseFormatter(formatName)(difference);
 };
