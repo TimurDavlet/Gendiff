@@ -1,37 +1,39 @@
-import { valueIsObj, valueIsStr } from '../utils/utils.js';
+import _ from 'lodash';
 
-const formattedValue = (obj, key) => {
-  if (valueIsObj(obj, key)) {
+const stringify = (value) => {
+  if (_.isPlainObject(value)) {
     return '[complex value]';
   }
-  if (valueIsStr(obj, key)) {
-    return `'${obj[key]}'`;
-  }
-  return obj[key];
+
+  return typeof value === 'string' ? `'${value}'` : value;
 };
 
-const plain = (obj) => {
-  const iter = (objX, complexKey = '') => {
-    const keys = Object.keys(objX);
-    return keys.reduce((accumulatedArr, key) => {
-      const clearKey = key.substring(2);
-      const plusKey = `+ ${clearKey}`;
-      const minusKey = `- ${clearKey}`;
-      const fullPath = `${complexKey}${clearKey}`;
-      const startPhrase = `Property '${fullPath}' was`;
-      if (key.startsWith('  ') && valueIsObj(objX, key)) {
-        return [...accumulatedArr, iter(objX[key], `${fullPath}.`)];
-      } if (key.startsWith('- ') && keys.includes(plusKey)) {
-        return [...accumulatedArr, `${startPhrase} updated. From ${formattedValue(objX, minusKey)} to ${formattedValue(objX, plusKey)}`];
-      } if (key.startsWith('- ') && !keys.includes(plusKey)) {
-        return [...accumulatedArr, `${startPhrase} removed`];
-      } if (key.startsWith('+ ') && !keys.includes(minusKey)) {
-        return [...accumulatedArr, `${startPhrase} added with value: ${formattedValue(objX, plusKey)}`];
-      }
-      return accumulatedArr;
-    }, []);
-  };
-  return iter(obj).flat(Infinity).join('\n');
+const renderPlain = (diff) => {
+  const iter = (tree, path) => tree.flatMap((node) => {
+    const {
+      name, value, oldValue, type, children,
+    } = node;
+
+    const outputValue = stringify(value);
+    const outputOldValue = stringify(oldValue);
+    const currentPath = [...path, name];
+    const currentPathStr = currentPath.join('.');
+
+    switch (type) {
+      case 'nested':
+        return iter(children, currentPath);
+      case 'add':
+        return `Property '${currentPathStr}' was added with value: ${outputValue}`;
+      case 'delete':
+        return `Property '${currentPathStr}' was removed`;
+      case 'updated':
+        return `Property '${currentPathStr}' was updated. From ${outputOldValue} to ${outputValue}`;
+      default:
+        return [];
+    }
+  });
+
+  return iter(diff, []).join('\n');
 };
 
-export default plain;
+export default renderPlain;

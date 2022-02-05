@@ -1,15 +1,57 @@
-import { valueIsObj } from '../utils/utils.js';
+import _ from 'lodash';
 
-const stylish = (obj, indentSize = 2) => {
+const getIndent = (depth, spacesCount = 4) => ' '.repeat(depth * spacesCount - 2);
+
+const stringify = (inputValue, depth) => {
+  if (!_.isPlainObject(inputValue)) {
+    return inputValue;
+  }
+
+  const obj = inputValue;
   const keys = Object.keys(obj);
-  const result = keys.reduce((accumArr, key) => {
-    if (valueIsObj(obj, key)) {
-      return [...accumArr, `${' '.repeat(indentSize)}${key}: ${stylish(obj[key], indentSize + 4)}`];
+  const indent = getIndent(depth);
+  const braceIndent = getIndent(depth - 1);
+
+  const innerPart = keys.map((key) => {
+    const currentValue = obj[key];
+    if (_.isPlainObject(currentValue)) {
+      return `${indent}  ${key}: ${stringify(currentValue, depth + 1)}`;
     }
-    const formattedValue = String(obj[key]).trim();
-    return [...accumArr, `${' '.repeat(indentSize)}${key}: ${formattedValue}`];
-  }, ['{']);
-  return [...result, `${' '.repeat(indentSize - 2)}}`].join('\n');
+
+    return `${indent}  ${key}: ${currentValue}`;
+  });
+
+  return `{\n${innerPart.join('\n')}\n${braceIndent}  }`;
 };
 
-export default stylish;
+const renderStylish = (diff) => {
+  const iter = (depth, node) => node.flatMap((child) => {
+    const {
+      name, value, type, oldValue, children,
+    } = child;
+    const indent = getIndent(depth);
+    const nextLevelDepth = depth + 1;
+
+    switch (type) {
+      case 'nested':
+        return `${indent}  ${name}: {\n${iter(nextLevelDepth, children)}\n${indent}  }`.split(',');
+      case 'updated':
+        return `${indent}- ${name}: ${stringify(oldValue, nextLevelDepth)}\n${indent}+ ${name}: ${stringify(value, nextLevelDepth)}`;
+      case 'add':
+        return `${indent}+ ${name}: ${stringify(value, nextLevelDepth)}`;
+      case 'delete':
+        return `${indent}- ${name}: ${stringify(value, nextLevelDepth)}`;
+      case 'unchanged':
+        return `${indent}  ${name}: ${value}`;
+      default:
+        throw new Error(`Unexpected condition ${type}. Please check the input data.`);
+    }
+  });
+
+  const startDepth = 1;
+  const innerPart = iter(startDepth, diff);
+
+  return `{\n${innerPart.join('\n')}\n}`;
+};
+
+export default renderStylish;
