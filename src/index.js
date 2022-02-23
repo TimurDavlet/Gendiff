@@ -1,14 +1,14 @@
 import { readFileSync } from 'fs';
+import path from 'path';
 import buildDiff from './core/diff.js';
 import parsingDoc from './core/parsers.js';
 import chooseFormatter from './formatters/index.js';
-import { getFormatFile, getAbsolutePath } from './core/path.js';
 
 export default (filepath1, filepath2, formatName = 'stylish') => {
-  const absolutePath1 = getAbsolutePath(filepath1);
-  const absolutePath2 = getAbsolutePath(filepath2);
-  const formatFile1 = getFormatFile(filepath1);
-  const formatFile2 = getFormatFile(filepath2);
+  const absolutePath1 = path.resolve(filepath1);
+  const absolutePath2 = path.resolve(filepath2);
+  const formatFile1 = path.extname(filepath1);
+  const formatFile2 = path.extname(filepath2);
   const fileData1 = readFileSync(absolutePath1, 'utf8');
   const fileData2 = readFileSync(absolutePath2, 'utf8');
   const parsingFileData1 = parsingDoc(fileData1, formatFile1);
