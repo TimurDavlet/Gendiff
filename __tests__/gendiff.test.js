@@ -30,7 +30,7 @@ describe('Comparison of complex files in different formats', () => {
         expect(result).toBe(expectedComplex);
         break;
       case 'json':
-        expect(result).toBe(expectedComplexJSON);
+        expect(result).toEqual(expectedComplexJSON);
         break;
     }
   });
