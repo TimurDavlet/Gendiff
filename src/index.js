@@ -14,5 +14,5 @@ export default (filepath1, filepath2, formatName = 'stylish') => {
   const parsingFileData1 = parsingDoc(fileData1, formatFile1);
   const parsingFileData2 = parsingDoc(fileData2, formatFile2);
   const difference = buildDiff(parsingFileData1, parsingFileData2);
-  return chooseFormatter(formatName)(difference);
+  return chooseFormatter(formatName, difference);
 };

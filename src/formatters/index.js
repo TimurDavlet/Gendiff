@@ -2,14 +2,14 @@ import plain from './plain.js';
 import stylish from './stylish.js';
 import jsonFormatter from './json.js';
 
-const chooseFormatter = (formatter) => {
-  if (formatter === 'plain') {
-    return plain;
+const chooseFormatter = (format, diff) => {
+  if (format === 'plain') {
+    return plain(diff);
   }
-  if (formatter === 'json' || formatter === 'JSON') {
-    return jsonFormatter;
+  if (format === 'json' || format === 'JSON') {
+    return jsonFormatter(diff);
   }
-  return stylish;
+  return stylish(diff);
 };
 
 export default chooseFormatter;
