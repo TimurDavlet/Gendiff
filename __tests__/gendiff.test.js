@@ -22,7 +22,7 @@ describe('Comparison of complex files in different formats', () => {
   test.each(extensions)(`format check ${extensions}`, (extension) => {
     const beforeFullPath = `${process.cwd()}/__fixtures__/before.${extension}`;
     const afterFullPath = `${process.cwd()}/__fixtures__/after.${extension}`;
-    const result = genDiff(beforeFullPath, afterFullPath);
+    const result = genDiff(beforeFullPath, afterFullPath, extension);
 
     // eslint-disable-next-line default-case
     switch (extension) {
@@ -30,7 +30,7 @@ describe('Comparison of complex files in different formats', () => {
         expect(result).toBe(expectedComplex);
         break;
       case 'json':
-        expect(result).toEqual(expectedComplexJSON);
+        expect(result).toBe(expectedComplexJSON);
         break;
     }
   });
@@ -38,5 +38,5 @@ describe('Comparison of complex files in different formats', () => {
   const beforeFullPath = `${process.cwd()}/__fixtures__/before.json`;
   const afterFullPath = `${process.cwd()}/__fixtures__/after.json`;
   // eslint-disable-next-line jest/no-standalone-expect
-  expect(genDiff(beforeFullPath, afterFullPath)).toBe(expectedComplexPlain);
+  expect(genDiff(beforeFullPath, afterFullPath, 'plain')).toBe(expectedComplexPlain);
 });
