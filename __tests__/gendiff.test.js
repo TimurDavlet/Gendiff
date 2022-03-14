@@ -16,10 +16,10 @@ const expectedComplexPlain = readFileSync(getFixturePath('expectedComplexPlain.t
 
 const expectedComplexJSON = readFileSync(getFixturePath('expectedComplexJSON.txt'), 'utf8');
 
-const extensions = [['json'], ['yml'], ['plain']];
+const extensions = [['json'], ['yml']];
 
 describe('Comparison of complex files in different formats', () => {
-  test.each(extensions)('json, yaml, plain', (extension) => {
+  test.each(extensions)(`format check ${extensions}`, (extension) => {
     const beforeFullPath = `${process.cwd()}/__fixtures__/before.${extension}`;
     const afterFullPath = `${process.cwd()}/__fixtures__/after.${extension}`;
     const result = genDiff(beforeFullPath, afterFullPath);
@@ -29,12 +29,14 @@ describe('Comparison of complex files in different formats', () => {
       case 'yml':
         expect(result).toBe(expectedComplex);
         break;
-      case 'plain':
-        expect(result).toBe(expectedComplexPlain);
-        break;
       case 'json':
         expect(result).toBe(expectedComplexJSON);
         break;
     }
   });
+
+  const beforeFullPath = `${process.cwd()}/__fixtures__/before.json`;
+  const afterFullPath = `${process.cwd()}/__fixtures__/after.json`;
+  // eslint-disable-next-line jest/no-standalone-expect
+  expect(genDiff(beforeFullPath, afterFullPath)).toBe(expectedComplexPlain);
 });
