@@ -1,16 +1,13 @@
 import yaml from 'js-yaml';
 
-const parsing = (data, format) => {
-  switch (format) {
-    case '.json':
-      return JSON.parse(data);
-    case '.yml':
-      return yaml.load(data);
-    case '.yaml':
-      return yaml.load(data);
-    default:
-      return null;
+const formatters = { yaml: yaml.load, json: JSON.parse, yml: yaml.load };
+
+const parsing = (format, data) => {
+  const formatter = formatters[format];
+  if (!formatter) {
+    throw new Error('unsupported file extension');
   }
+  return formatter(data);
 };
 
 export default parsing;
