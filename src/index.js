@@ -1,7 +1,7 @@
 import buildDiff from './core/diff.js';
 import parsingDoc from './core/parsers.js';
 import getFormatted from './core/formatters/index.js';
-import { generatePath, getExtname, readFile } from './core/path.js';
+import { generatePath, getExtname, readFile } from './core/helpers.js';
 
 export default (filepath1, filepath2, formatName = 'stylish') => {
   const absolutePath1 = generatePath(filepath1);
